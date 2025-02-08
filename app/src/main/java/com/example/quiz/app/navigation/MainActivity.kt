@@ -18,9 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quiz.games.screen.GamesScreen
 import com.example.quiz.games.viewmodel.GamesViewModel
-import com.example.quiz.memory.screen.MemoryScreen
 import com.example.quiz.quiz.screen.QuizScreen
-import com.example.quiz.quiz.uistate.QuizUiState
 import com.example.quiz.quiz.viewmodel.QuizViewModel
 import dagger.android.AndroidInjection
 import dagger.android.support.DaggerAppCompatActivity
@@ -61,7 +59,6 @@ class MainActivity : DaggerAppCompatActivity() {
                         val gamesUiState by vm.gamesUiState.collectAsState()
                         GamesScreen(
                             openQuiz = vm::openQuiz,
-                            openMemory = vm::openMemory,
                             gamesUiState = gamesUiState
                         )
                     }
@@ -76,10 +73,6 @@ class MainActivity : DaggerAppCompatActivity() {
                             buttonClick = { answer -> vm.onButtonClick(answer) },
                             openQuiz = vm::openQuiz,
                             openGames = vm::openGames,
-                        )
-                    }
-                    composable(Screen.MemoryScreen.route) {
-                        MemoryScreen(
                         )
                     }
                 }

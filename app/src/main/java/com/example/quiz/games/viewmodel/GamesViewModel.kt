@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.quiz.app.navigation.Navigator
 import com.example.quiz.games.uistate.GamesUiState
-import com.example.quiz.quiz.uistate.QuizUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -17,8 +16,6 @@ class GamesViewModel @Inject constructor(
     val gamesUiState = _gamesUiState.asStateFlow()
 
     fun openQuiz() = navigator.openQuiz()
-
-    fun openMemory() = navigator.openMemory()
 
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(

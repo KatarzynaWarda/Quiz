@@ -22,11 +22,5 @@ class AppNavigator @Inject constructor(
         }
     }
 
-    override fun openMemory() {
-        getContext()?.let {
-            it.startActivity(MainActivity.createIntent(it, Screen.MemoryScreen))
-        }
-    }
-
     private fun getContext() = weakActivity.get()
 }

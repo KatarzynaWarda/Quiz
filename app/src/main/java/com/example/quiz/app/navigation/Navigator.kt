@@ -4,5 +4,4 @@ interface Navigator {
 
     fun openQuiz()
     fun openGames()
-    fun openMemory()
 }

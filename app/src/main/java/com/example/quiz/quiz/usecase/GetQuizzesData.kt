@@ -1,52 +1,49 @@
 package com.example.quiz.quiz.usecase
 
+import com.example.quiz.games.potem.UserDictionaryUseCase
 import com.example.quiz.quiz.uistate.QuizModel
 import javax.inject.Inject
 
-class GetQuizzesData @Inject constructor() : GetQuizzesDataUseCase {
+class GetQuizzesData @Inject constructor(
+    private val userDictionaryUseCase: UserDictionaryUseCase,
+) : GetQuizzesDataUseCase {
+    private val quizData = getQuizQuestions(userDictionaryUseCase)
 
-    override fun invoke() = quizzesList
+    override fun invoke(): List<QuizModel> = quizzesList()
 
-    private val quizzesList = listOf(
-        QuizModel(
-            question = "Polska",
-            answerA = "Mińsk",
-            answerB = "Berlin",
-            answerC = "Warszawa",
-            answerD = "Kijów",
-            properAnswer = "Warszawa",
-        ),
-        QuizModel(
-            question = "Niemcy",
-            answerA = "Warszawa",
-            answerB = "Mińsk",
-            answerC = "Paryż",
-            answerD = "Berlin",
-            properAnswer = "Berlin",
-        ),
-        QuizModel(
-            question = "Ukraina",
-            answerA = "Paryż",
-            answerB = "Kijów",
-            answerC = "Berlin",
-            answerD = "Warszawa",
-            properAnswer = "Kijów",
-        ),
-        QuizModel(
-            question = "Białoruś",
-            answerA = "Mińsk",
-            answerB = "Paryż",
-            answerC = "Berlin",
-            answerD = "Warszawa",
-            properAnswer = "Mińsk",
-        ),
-        QuizModel(
-            question = "Francja",
-            answerA = "Mińsk",
-            answerB = "Warszawa",
-            answerC = "Paryż",
-            answerD = "Kijów",
-            properAnswer = "Paryż",
-        ),
-    )
+    private fun quizzesList(): List<QuizModel> {
+
+        return quizData.map { quiz ->
+            QuizModel(
+                question = quiz.first,
+                answerA = quiz.second[0],
+                answerB = quiz.second[1],
+                answerC = quiz.second[2],
+                answerD = quiz.second[3],
+                properAnswer = quiz.third,
+            )
+        }
+    }
+
+    private fun getQuizQuestions(
+        countriesAndCapitals: UserDictionaryUseCase,
+    ): List<Triple<String, List<String>, String>> {
+
+        val selectedCountries = countriesAndCapitals().entryModel.shuffled()
+
+        return selectedCountries.map { correctPair ->
+            val correctCountry = correctPair.term
+            val correctCapital = correctPair.definition
+
+            val incorrectCapitals = selectedCountries
+                .filter { it.definition != correctCapital }
+                .shuffled()
+                .take(3)
+                .map { it.definition }
+
+            val answers = (incorrectCapitals + correctCapital).shuffled()
+
+            Triple(correctCountry, answers, correctCapital)
+        }
+    }
 }
